@@ -1,0 +1,33 @@
+ติดตั้ง visual studio community > Destop deveropment with c++ ก่อน ถึงจะลง 
+cmake => dlib => face_recognition => numpy => opencv-python =>  ได้
+
+1//////////////
+ระหวัง size รูป  
+    size ใหญ่ process ช้า
+ก่อน face_locations ต้อง resize ก่อน ต้องมาดูอีกทีว่า size ไหนเหมาะ
+จากที่คิดคง 300 dpi เดี๋ยวลองเอาโค้ดเก่า
+def improve(img):
+    img = cv2.resize(img, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_CUBIC)
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    kernel = np.ones((1, 1), np.uint8)
+    impro = cv2.dilate(img_gray, kernel, iterations=1)
+    impro = cv2.erode(impro, kernel, iterations=1)
+    impro = cv2.GaussianBlur(impro, (5, 5), 0)
+    impro = cv2.threshold(impro, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    impro = cv2.cvtColor(img_gray, cv2.COLOR_BGR2RGB)
+    return impro
+คงต้องตัดส่วน  img_gray และเพิ่ม BGR2RGB มาใส่ เดี๋ยวมาดูอีกที
+
+2////////////
+ส่วน dis จะ return ค่า %error เดี๋ยว เปลี่ยนเป็น %ความถูกต้อง จะลองเอามาลบ 1
+
+3///////////
+สามารถทำได้เลย เมื่อจะ train ก็เก็บ encoding แต่ละบุคคลไว้ที่ DB แล้วเรียกเช็คโดย เปลี่ยนรูปที่จะมาเช็ค เป็น endodding แล้วเทียบรายบุคคล ถ้าตรง ก็ return ชื่อมา
+
+"r"   Opens a file for reading only.
+"r+"  Opens a file for both reading and writing.
+"rb"  Opens a file for reading only in binary format.
+"rb+" Opens a file for both reading and writing in binary format.
+"w"   Opens a file for writing only.
+"a"   Open for writing.  The file is created if it does not exist.
+"a+"  Open for reading and writing.  The file is created if it does not exist.
